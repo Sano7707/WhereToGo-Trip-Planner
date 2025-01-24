@@ -1,0 +1,182 @@
+version: '3.8'
+
+services:
+  # ========== Databases ==========
+
+  auth-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+      - ./database-init/auth-db:/docker-entrypoint-initdb.d
+    networks:
+      - travel-net
+
+
+  flight-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: flight_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - flight-data:/var/lib/postgresql/data
+      - ./database-init/flight-db:/docker-entrypoint-initdb.d
+    networks:
+      - travel-net
+
+  hotel-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: hotel_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - hotel-data:/var/lib/postgresql/data
+      - ./database-init/hotel-db:/docker-entrypoint-initdb.d
+    networks:
+      - travel-net
+
+  transport-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: transport_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - transport-data:/var/lib/postgresql/data
+      - ./database-init/transport-db:/docker-entrypoint-initdb.d
+    networks:
+      - travel-net
+
+  # ========== Core Services ==========
+  flight-service:
+    build: ./flight-service
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://flight-db:5432/flight_db
+    depends_on:
+      - flight-db
+    networks:
+      - travel-net
+
+  hotel-service:
+    build: ./hotel-service
+    ports:
+      - "8088:8088"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://hotel-db:5432/hotel_db
+    depends_on:
+      - hotel-db
+    networks:
+      - travel-net
+
+  transportation-service:
+    build: ./transportation-service
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://transport-db:5432/transport_db
+    depends_on:
+      - transport-db
+    networks:
+      - travel-net
+
+  # ========== Orchestration Services ==========
+  trip-plan-service:
+    build: ./trip-plan-service
+    ports:
+      - "8080:8080"
+    environment:
+      FLIGHT_SERVICE_URL: http://flight-service:8087
+      HOTEL_SERVICE_URL: http://hotel-service:8088
+      TRANSPORT_SERVICE_URL: http://transportation-service:8089
+    depends_on:
+      - flight-service
+      - hotel-service
+      - transportation-service
+    networks:
+      - travel-net
+
+  recommendation-service:
+    build: ./recommendation-service
+    ports:
+      - "8081:8081"
+    environment:
+      GEMINI_SERVICE_URL: http://gemini-service:8083
+      PEXELS_SERVICE_URL: http://pexels-service:8084
+      WEATHER_SERVICE_URL: http://weather-service:8085
+    depends_on:
+      - gemini-service
+      - pexels-service
+      - weather-service
+    networks:
+      - travel-net
+
+  # ========== Support Services ==========
+  gemini-service:
+    build: ./gemini-service
+    ports:
+      - "8083:8083"
+    networks:
+      - travel-net
+
+  pexels-service:
+    build: ./pexels-service
+    ports:
+      - "8084:8084"
+    networks:
+      - travel-net
+
+  weather-service:
+    build: ./weather-service
+    ports:
+      - "8085:8085"
+    networks:
+      - travel-net
+
+  authentication-service:
+    build: ./authentication-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/auth_db
+      SPRING_DATASOURCE_USERNAME: auth_user
+      SPRING_DATASOURCE_PASSWORD: auth_pass
+      JWT_SECRET: your_jwt_secret_key
+    ports:
+      - "8082:8082"
+    depends_on:
+      - auth-db
+    networks:
+      - travel-net
+
+  # ========== Frontend ==========
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_TRIP_API: http://localhost:8080
+      REACT_APP_RECOMMEND_API: http://localhost:8081
+      REACT_APP_AUTH_API: http://localhost:8082
+    depends_on:
+      - trip-plan-service
+      - recommendation-service
+      - authentication-service
+    networks:
+      - travel-net
+
+volumes:
+  flight-data:
+  hotel-data:
+  transport-data:
+  auth-data:
+
+
+
+networks:
+  travel-net:
+    driver: bridge
