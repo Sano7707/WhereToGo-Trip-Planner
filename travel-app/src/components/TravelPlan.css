@@ -1,0 +1,205 @@
+.travel-plan-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #2c3e50;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  margin: 30px 0 20px;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.search-form select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.search-form button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin: 20px 0;
+}
+
+/* Base Card Styles */
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-left: 5px solid;
+}
+
+/* Weather Card Variations */
+.weather-card {
+  background: #f0f9ff;
+  border-color: #2196F3;
+}
+
+.weather-card h3 {
+  color: #1565c0;
+  margin-top: 0;
+}
+
+.forecast-card {
+  background: #f8f9fa;
+  border-color: #607d8b;
+}
+
+.forecast-card h3 {
+  color: #455a64;
+}
+
+/* Place Card Styles */
+.place-card {
+  border-color: #4CAF50;
+}
+
+.place-card h3 {
+  color: #2e7d32;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.card p {
+  margin: 10px 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.weather-details p {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-details p::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+}
+
+.card button {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.card button:hover {
+  background-color: #218838;
+}
+
+/* Cheapest Plan Section */
+.cheapest-plan {
+  margin: 40px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+
+.cheapest-plan h2 {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.cheapest-card {
+  border-color: #28a745 !important;
+  background-color: #e8f5e9 !important;
+}
+
+.cheapest-card h3 {
+  color: #2e7d32;
+}
+
+.total-card {
+  border-color: #007bff !important;
+  background-color: #e3f2fd !important;
+}
+
+.total-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #007bff;
+  text-align: center;
+  margin: 15px 0;
+}
+
+.book-button {
+  background-color: #28a745 !important;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.book-button:hover {
+  background-color: #218838 !important;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-form {
+    flex-direction: column;
+  }
+  
+  .search-form select {
+    width: 100%;
+  }
+}
