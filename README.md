@@ -17,16 +17,12 @@
    ```bash
    git clone https://github.com/yourusername/WhereToGo-Trip-Planner.git
    cd WhereToGo-Trip-Planner
-
 2.  **Build containers**
-   
+    ```bash
     docker-compose build --no-cache
-    
 3.  **Start application**
-
+     ```bash
     docker-compose up -d
-    
-
 ----------
 
 ### 🔌 Access Endpoints
