@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   # ========== Databases ==========
@@ -59,6 +58,8 @@ services:
       - "8087:8087"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://flight-db:5432/flight_db
+      DATASOURCE_USERNAME: user
+      DATASOURCE_PASSWORD: password
     depends_on:
       - flight-db
     networks:
@@ -70,6 +71,8 @@ services:
       - "8088:8088"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://hotel-db:5432/hotel_db
+      DATASOURCE_USERNAME: user
+      DATASOURCE_PASSWORD: password
     depends_on:
       - hotel-db
     networks:
@@ -81,6 +84,8 @@ services:
       - "8089:8089"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://transport-db:5432/transport_db
+      DATASOURCE_USERNAME: user
+      DATASOURCE_PASSWORD: password
     depends_on:
       - transport-db
     networks:
@@ -153,11 +158,11 @@ services:
     networks:
       - travel-net
 
-  # ========== Frontend ==========
-  frontend:
-    build: ./frontend
+  # ========== curl http://172.18.0.3:3000tend ==========
+  travel-app:
+    build: ./travel-app
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:80"
     environment:
       REACT_APP_TRIP_API: http://localhost:8080
       REACT_APP_RECOMMEND_API: http://localhost:8081

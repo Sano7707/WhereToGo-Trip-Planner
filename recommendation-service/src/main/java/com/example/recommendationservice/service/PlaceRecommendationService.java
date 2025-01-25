@@ -16,9 +16,9 @@ import java.util.Map;
 @Service
 public class PlaceRecommendationService {
 
-    private final WebClient geminiClient = WebClient.create("http://localhost:8083/api");
-    private final WebClient pexelsClient = WebClient.create("http://localhost:8084/api");
-    private final WebClient weatherClient = WebClient.create("http://localhost:8085/api");
+    private final WebClient geminiClient = WebClient.create("http://gemini-service:8083/api");
+    private final WebClient pexelsClient = WebClient.create("http://pexels-service:8084/api");
+    private final WebClient weatherClient = WebClient.create("http://weather-service:8085/api");
 
     public Mono<Map<String, Object>> getRecommendedPlaces(PlaceRequestDTO request) {
         // Fetch places and weather in parallel
