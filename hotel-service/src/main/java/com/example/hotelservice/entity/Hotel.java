@@ -12,8 +12,8 @@ import jakarta.persistence.Table;
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")  // Add this annotation
     private Long id;
-
     @Column(name = "name")
     private String name;
 

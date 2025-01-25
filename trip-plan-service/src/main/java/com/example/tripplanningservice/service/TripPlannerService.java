@@ -13,9 +13,9 @@ import java.util.Map;
 @Service
 public class TripPlannerService {
 
-    private final WebClient flightClient = WebClient.create("http://localhost:8087/api");
-    private final WebClient hotelClient = WebClient.create("http://localhost:8088/api");
-    private final WebClient transportationClient = WebClient.create("http://localhost:8089/api");
+    private final WebClient flightClient = WebClient.create("http://flight-service:8087/api");
+    private final WebClient hotelClient = WebClient.create("http://hotel-service:8088/api");
+    private final WebClient transportationClient = WebClient.create("http://transportation-service:8089/api");
 
     public Mono<Map<String, Object>> aggregateResults(String departure, String destination) {
         // Fetch flights, hotels, and transportations in parallel
@@ -54,6 +54,7 @@ public class TripPlannerService {
                 response.put("hotels", hotels);
                 response.put("transportations", transportations);
 
+                System.out.println("Transportations " + transportations);
                 // Find and append cheapest options
                 Map<String, Object> cheapestFlight = flights.stream()
                     .min(Comparator.comparingDouble(f -> (Double) f.get("cost")))
