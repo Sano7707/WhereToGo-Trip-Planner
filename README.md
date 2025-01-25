@@ -20,23 +20,21 @@ docker-compose build --no-cache
 
 # 3. Start application
 docker-compose up -d
-🔌 Access Endpoints
-Frontend: http://localhost:3000
+### 🔌 Access Endpoints
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
 
-Core Services:
-Trip Planner API: http://localhost:8080
+#### Core Services:
+- **Trip Planner API**: [http://localhost:8080](http://localhost:8080)
+- **Recommendations API**: [http://localhost:8081](http://localhost:8081)
+- **Authentication API**: [http://localhost:8082](http://localhost:8082)
 
-Recommendations API: http://localhost:8081
-
-Authentication API: http://localhost:8082
-
-API Documentation
-Explore the full API documentation on SwaggerHub:
-WhereToGo-TripPlanner API Docs
+### API Documentation
+Explore the full API documentation on SwaggerHub:  
+[WhereToGo-TripPlanner API Docs](https://app.swaggerhub.com/apis/SANOHAMBARDZUMYAN77/WhereToGo-TripPlanner/1.0.0)
 
 📝 Notes
-The .env file is missing, but all necessary API keys are included in the source code for free testing purposes.
+The .env file is missing, but all necessary API keys are included in the source code for free testing.
 
-Important: If the API key limits are reached, the services may not function as expected. These keys are provided solely for testing and demonstration purposes.
+Important: The services may not function as expected if the API key limits are reached. These keys are provided solely for testing and demonstration purposes.
 
 Enjoy planning your trips with WhereToGo! 🌟
