@@ -17,7 +17,7 @@ function Footer() {
     setLoading(true); // Set loading state to true when subscription request starts
   
     try {
-      const response = await fetch(`https://armenianspeech.info/subscribe?email=${email}`, {
+      const response = await fetch(`https://localhost/subscribe?email=${email}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -39,13 +39,13 @@ function Footer() {
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      setLoading(false); // Reset loading state when subscription request completes
+      setLoading(false); 
     }
   };
 
   const handleChange = (e) => {
     setEmail(e.target.value);
-    setErrorMessage(''); // Clear error message when user types in the input
+    setErrorMessage(''); 
   };
 
   return (
