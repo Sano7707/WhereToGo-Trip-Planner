@@ -83,7 +83,7 @@ public class PhotoArchiveDAO {
 
         // Load SQL queries
         sqlQueries = new Properties();
-        try (InputStream input = new FileInputStream("/Users/sano/Desktop/WhereToGo - Trip Planner/photoapp2/src/main/resources/static/sql-queries.properties")) {
+        try (InputStream input = new FileInputStream("src/main/resources/static/sql-queries.properties")) {
             sqlQueries.load(input);  // Load SQL queries from properties file
         } catch (IOException e) {
             System.err.println("Error loading SQL queries from properties file: " + e.getMessage());
@@ -94,7 +94,7 @@ public class PhotoArchiveDAO {
     public void setUpConnection(){
         // Load database properties
         Properties dbProperties = new Properties();
-        try (InputStream dbInput = new FileInputStream("/Users/sano/Desktop/WhereToGo - Trip Planner/photoapp2/src/main/resources/static/database.properties")) {
+        try (InputStream dbInput = new FileInputStream("src/main/resources/static/database.properties")) {
             dbProperties.load(dbInput);
             this.url = dbProperties.getProperty("db.url");
             this.username = dbProperties.getProperty("db.username");
@@ -189,10 +189,11 @@ public class PhotoArchiveDAO {
         return travels;
     }
 
-    public void createTravelLog(String userId, String travelDest, String travelDate) {
+    public String createTravelLog(String userId, String travelDest, String travelDate) {
         setUpConnection();
         String sql = sqlQueries.getProperty("SQL_TO_CREATE_TRAVEL_BY_USER_ID");
-        
+        String travelId = null;
+
         try (Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -204,9 +205,10 @@ public class PhotoArchiveDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 // If we have a result, process it
                 if (rs.next()) {
-                    boolean isSuccess = rs.getBoolean(1);
-                    if (isSuccess) {
+                    travelId = rs.getString(1);
+                    if (travelId != null) {
                         System.out.println("Travel log successfully created for user: " + userId);
+                        return travelId;
                     } else {
                         System.out.println("Failed to create travel log for user: " + userId);
                     }
@@ -223,6 +225,17 @@ public class PhotoArchiveDAO {
             // Handle any other exceptions
             System.err.println("Unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
+        }
+        return travelId;
+    }
+
+    public void deleteTravelLogByTravelId(String travelId) throws SQLException {
+        setUpConnection();
+        String sql = sqlQueries.getProperty("SQL_TO_DELETE_TRAVEL_LOG_BY_TRAVEL_ID");
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, travelId);
+            statement.executeUpdate();
         }
     }
 }

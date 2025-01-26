@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ public class PhotoArchiveController {
 
             // Return the travelIds as a JSON array
             return ResponseEntity.ok(travelIds);
+            
         } catch (Exception e) {
             return ResponseEntity.status(500)
                     .body("Failed to fetch travel logs: " + e.getMessage());
@@ -45,16 +47,24 @@ public class PhotoArchiveController {
 
     @PostMapping("/create")
     @CrossOrigin
-    public ResponseEntity<String> createNewTravelLog(@RequestParam("userId") String userId,
+    public ResponseEntity<Map<String, String>> createNewTravelLog(@RequestParam("userId") String userId,
                                                      @RequestParam("travelDest") String travelDest,
                                                      @RequestParam("travelDate") String travelDate) {       
         try{
-            photoArchiveService.createTravelLog(userId, travelDest, travelDate);
-            return ResponseEntity.ok("Travel log uploaded successfully for userId: " + userId);
-        }
-        catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload travel log: " + e.getMessage());
+            String travelId = photoArchiveService.createTravelLog(userId, travelDest, travelDate);
+            // Return structured JSON response
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Travel log uploaded successfully");
+            response.put("userId", userId);
+            response.put("travelId", travelId);
+
+            return ResponseEntity.ok(response);
+        } catch (SQLException e) {
+            // Error response
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to upload travel log");
+            errorResponse.put("details", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
@@ -71,7 +81,7 @@ public class PhotoArchiveController {
         }
     }
 
-    @DeleteMapping("/delete/{travelId}")
+    @DeleteMapping("/delete-files/{travelId}")
     @CrossOrigin
     public ResponseEntity<String> deleteArchive(@PathVariable String travelId) {
         try {
@@ -80,6 +90,18 @@ public class PhotoArchiveController {
         } catch (SQLException | IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to delete archive: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete/{travelId}")
+    @CrossOrigin
+    public ResponseEntity<String> deleteTravelLog(@PathVariable String travelId) {
+        try {
+            photoArchiveService.deleteTravelLogByTravelId(travelId);
+            return ResponseEntity.ok("Travel deleted for travelId: " + travelId);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete travel: " + e.getMessage());
         }
     }
 
