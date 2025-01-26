@@ -21,17 +21,31 @@ function TravelPlan() {
       setError("Please select both departure and destination cities.");
       return;
     }
-
+  
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (!jwtToken) {
+      alert("Please login first!");
+      return;
+    }
+  
     try {
       const response = await axios.get("http://localhost:8080/api/search", {
-        params: { departure, destination }
+        params: { departure, destination },
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
       });
       setTravelPlan(response.data);
       setError("");
       localStorage.setItem("travelPlan", JSON.stringify(response.data));
     } catch (err) {
-      setError("Failed to fetch travel plan. Please try again.");
-      setTravelPlan(null);
+      if (err.response?.status === 401) {
+        localStorage.removeItem("jwtToken");
+        alert("Session expired. Please login again.");
+      } else {
+        setError("Failed to fetch travel plan. Please try again.");
+        setTravelPlan(null);
+      }
     }
   };
 

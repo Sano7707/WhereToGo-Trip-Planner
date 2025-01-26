@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,35 +22,43 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
+    private final String secretKey;
+    private final long expiration;
 
-    private String secretkey = "";
+    public JWTService(
+        @Value("${jwt.secret}") String secretKey,
+        @Value("${jwt.expiration}") long expiration
+    ) {
+        this.secretKey = secretKey;
+        this.expiration = expiration;
 
-    public JWTService() {
-
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+        // Validate the secret key format
+        if (this.secretKey == null || this.secretKey.length() < 32) {
+            throw new IllegalArgumentException("JWT secret key must be at least 256-bit (32 characters)");
         }
     }
 
     public String generateToken(String email) {
-        Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
-            .claims()
-            .add(claims)
             .subject(email)
             .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 24000))
-            .and()
+            .expiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(getKey())
             .compact();
     }
 
+    // Add this method for token verification without UserDetails
+    public boolean isTokenValid(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
