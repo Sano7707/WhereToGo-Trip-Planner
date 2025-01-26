@@ -22,13 +22,29 @@ function Recorder() {
       alert("Please provide a destination.");
       return;
     }
-
+  
+    const jwtToken = localStorage.getItem("jwtToken");
+    console.log("JWT Token from localStorage:", jwtToken); // Debug 1
+    
+    if (!jwtToken) {
+      alert("Please login first!");
+      return;
+    }
+  
     setLoading(true);
-
+  
+    // Debug 2 - Log full request details
+    console.log("Sending request to:", "http://localhost:8081/api/where-to-go");
+    console.log("Request headers:", {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${jwtToken}`
+    });
+  
     fetch("http://localhost:8081/api/where-to-go", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwtToken}` 
       },
       body: JSON.stringify({
         destination,
@@ -36,16 +52,27 @@ function Recorder() {
         preferences: userPreferences,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setResponse(data);
-        setLoading(false);
-        localStorage.setItem("travelRecommendations", JSON.stringify(data));
-      })
-      .catch((error) => {
-        console.error("Error fetching recommendations:", error);
-        setLoading(false);
-      });
+    .then(response => {
+      console.log("Response status:", response.status); // Debug 3
+      console.log("Response headers:", [...response.headers]); // Debug 4
+      
+      if (response.status === 401) {  
+        localStorage.removeItem("jwtToken");
+        alert("Session expired. Please login again.");
+        return Promise.reject("Unauthorized");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Response data:", data); // Debug 5
+      setResponse(data);
+      setLoading(false);
+      localStorage.setItem("travelRecommendations", JSON.stringify(data));
+    })
+    .catch((error) => {
+      console.error("Error details:", error); // Debug 6
+      setLoading(false);
+    });
   };
 
   return (

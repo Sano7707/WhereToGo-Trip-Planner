@@ -100,10 +100,13 @@ services:
       FLIGHT_SERVICE_URL: http://flight-service:8087
       HOTEL_SERVICE_URL: http://hotel-service:8088
       TRANSPORT_SERVICE_URL: http://transportation-service:8089
+      AUTHENTICATION_SERVICE_URL: http://authentication-service:8082
     depends_on:
       - flight-service
       - hotel-service
       - transportation-service
+      -  authentication-service
+
     networks:
       - travel-net
 
@@ -115,10 +118,12 @@ services:
       GEMINI_SERVICE_URL: http://gemini-service:8083
       PEXELS_SERVICE_URL: http://pexels-service:8084
       WEATHER_SERVICE_URL: http://weather-service:8085
+      AUTHENTICATION_SERVICE_URL: http://authentication-service:8082
     depends_on:
       - gemini-service
       - pexels-service
       - weather-service
+      - authentication-service
     networks:
       - travel-net
 
@@ -150,7 +155,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/auth_db
       SPRING_DATASOURCE_USERNAME: auth_user
       SPRING_DATASOURCE_PASSWORD: auth_pass
-      JWT_SECRET: your_jwt_secret_key
+      environment:
+      JWT_SECRET: "vwOAxoSoZC9aF0WCAul/U1K2QYAHu2SJR/QNRUdZgq0="
+
     ports:
       - "8082:8082"
     depends_on:
