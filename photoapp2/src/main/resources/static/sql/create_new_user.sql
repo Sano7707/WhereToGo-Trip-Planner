@@ -1,2 +1,0 @@
-INSERT INTO users.users_info ( nickname, "name", surname, birth_date) VALUES(?, ?, ?, ?) returning id, nickname, "name";
-curl -X POST http://localhost:8083/api/photos/upload -F "travelId=123e4567-e89b-12d3-a456-426614174002" -F "files=@C:\Users\jjuul\OneDrive\Изображения\164774-tandzhiro_kamado-ubijca_demonov_kimetsu_no_yaiba-anime-purpur-art-3840x2160.jpg"

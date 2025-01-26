@@ -1,1 +1,0 @@
-INSERT INTO users.travel_archive (travel_id, archive_data) VALUES (?, ?);
