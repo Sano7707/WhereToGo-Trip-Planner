@@ -24,7 +24,7 @@ function Recorder() {
     }
   
     const jwtToken = localStorage.getItem("jwtToken");
-    console.log("JWT Token from localStorage:", jwtToken); // Debug 1
+    console.log("JWT Token from localStorage:", jwtToken); 
     
     if (!jwtToken) {
       alert("Please login first!");
@@ -33,7 +33,6 @@ function Recorder() {
   
     setLoading(true);
   
-    // Debug 2 - Log full request details
     console.log("Sending request to:", "http://localhost:8081/api/where-to-go");
     console.log("Request headers:", {
       "Content-Type": "application/json",
@@ -53,8 +52,8 @@ function Recorder() {
       }),
     })
     .then(response => {
-      console.log("Response status:", response.status); // Debug 3
-      console.log("Response headers:", [...response.headers]); // Debug 4
+      console.log("Response status:", response.status); 
+      console.log("Response headers:", [...response.headers]); 
       
       if (response.status === 401) {  
         localStorage.removeItem("jwtToken");
@@ -64,13 +63,13 @@ function Recorder() {
       return response.json();
     })
     .then((data) => {
-      console.log("Response data:", data); // Debug 5
+      console.log("Response data:", data); 
       setResponse(data);
       setLoading(false);
       localStorage.setItem("travelRecommendations", JSON.stringify(data));
     })
     .catch((error) => {
-      console.error("Error details:", error); // Debug 6
+      console.error("Error details:", error); 
       setLoading(false);
     });
   };

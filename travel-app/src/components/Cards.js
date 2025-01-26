@@ -14,13 +14,13 @@ function Cards() {
               src='images/places.jpeg'
               text='Suggestions where to visit while travelling'
               label='Places'
-              path='/services'
+              path='/'
             />
             <CardItem
               src='images/memory_book.jpg'
               text='Save your trips for a memory book'
               label='Memories'
-              path='/services'
+              path='/'
             />
           </ul>
           <ul className='cards__items'>
@@ -28,19 +28,19 @@ function Cards() {
               src='images/travel_assistant.png'
               text='Virtual Assistant '
               label='AI-Assistant'
-              path='/services'
+              path='/'
             />
             <CardItem
               src='images/must_see_places.jpg'
               text='"Must-See" Lists'
               label='Moments'
-              path='/services'
+              path='/'
             />
             <CardItem
               src='images/hidden_gems.png'
               text='Find out hidden gems'
               label='Discoveries'
-              path='/services'
+              path='/'
             />
           </ul>
         </div>
