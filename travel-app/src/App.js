@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/pages/Home';
 import Services from './components/pages/Services';
 import Products from './components/pages/Products';
 import Registration from './components/pages/Registration';
 import LoginPage from './components/pages/LoginPage';
-import axios from 'axios'
 import TravelArchivePage from './components/pages/TravelArchivePage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('jwtToken') !== null);
   const [userName, setUserName] = useState(localStorage.getItem('username'));
-
-
 
   const isTokenExpired = (token) => {
     try {
@@ -47,7 +44,12 @@ function App() {
         <Route path='/services' element={<Services />} />
         <Route path='/products' element={<Products />} />
         <Route path='/register' element={<Registration />} />
-        <Route path='/travel-archive' element={<TravelArchivePage />} />
+        
+        {/* Protected Route for Travel Archive */}
+        <Route
+          path='/travel-archive'
+          element={isLoggedIn ? <TravelArchivePage /> : <Navigate to='/login' />}
+        />
 
         <Route
           path='/login'

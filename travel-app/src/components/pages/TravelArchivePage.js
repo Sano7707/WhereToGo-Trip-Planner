@@ -1,26 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Named import
 import './TravelArchivePage.css';
 
 const TravelArchivePage = () => {
   const navigate = useNavigate();
-  const userId = 'bd4ffbd0-c1c4-492d-8163-b1b6861bc907';
   const [travelLogs, setTravelLogs] = useState([]);
   const [newLog, setNewLog] = useState({ travelDest: '', travelDate: '' });
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Retrieve and decode the JWT token
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      console.log('No JWT token found');
+      navigate('/travel-archive');
+      return null;
+    }
+    try {
+      const decodedToken = jwtDecode(token);
+      console.log('Decoded token:', decodedToken); // Log the decoded token to check its contents
+      return decodedToken.sub; // Use 'sub' (email) as the user ID
+    } catch (error) {
+      console.log('Error decoding token:', error);
+      navigate('/travel-archive');
+      return null;
+    }
+  };
+
+  const userId = getUserIdFromToken();
+
   useEffect(() => {
-    if (!localStorage.getItem('jwtToken')) navigate('/travel-archive');
-    
+    if (!userId) return;
+
     const fetchTravelLogs = async () => {
       try {
+        console.log('Fetching travel logs for userId:', userId); // Log userId to check if it's available
         const response = await axios.get('http://localhost:8086/api/photos/travels', {
           params: { userId }
         });
-    
+
+        console.log('Fetched travel logs:', response.data); // Log the fetched data
+
         const transformedLogs = response.data.map((log) => ({
           travelId: log.travel_id,
           travelDest: log.dest_name,
@@ -30,9 +54,10 @@ const TravelArchivePage = () => {
           isDeleteVisible: log.is_delete_visible,
           isDeleteFilesVisible: log.is_delete_files_visible,
         }));
-    
+
         setTravelLogs(transformedLogs);
       } catch (err) {
+        console.error('Error fetching travel logs:', err);
         const errorMessage = err.response?.data || 'Failed to load travel logs. Please try again later.';
         setError(errorMessage);
       } finally {
@@ -53,9 +78,9 @@ const TravelArchivePage = () => {
       );
       setShowCreateForm(false);
       setNewLog({ travelDest: '', travelDate: '' });
-      window.location.reload(); // This will reload the current page
+      window.location.reload();
     } catch (err) {
-      setError(typeof err.response?.data === 'object' ? JSON.stringify(err.response?.data, null, 2) : err.response?.data || 'Failed to create travel log');
+      setError(err.response?.data || 'Failed to create travel log');
     }
   };
 
@@ -66,9 +91,9 @@ const TravelArchivePage = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` }
         });
         setTravelLogs(travelLogs.filter(log => log.travelId !== travelId));
-        window.location.reload(); // This will reload the current page
+        window.location.reload();
       } catch (err) {
-        setError(typeof err.response?.data === 'object' ? JSON.stringify(err.response?.data, null, 2) : err.response?.data || 'Failed to delete travel log');
+        setError(err.response?.data || 'Failed to delete travel log');
       }
     }
   };
@@ -82,9 +107,9 @@ const TravelArchivePage = () => {
         setTravelLogs(travelLogs.map(log => 
           log.travelId === travelId ? { ...log, files: [] } : log
         ));
-        window.location.reload(); // This will reload the current page
+        window.location.reload();
       } catch (err) {
-        setError(typeof err.response?.data === 'object' ? JSON.stringify(err.response?.data, null, 2) : err.response?.data || 'Failed to delete files');
+        setError(err.response?.data || 'Failed to delete files');
       }
     }
   };
@@ -102,9 +127,9 @@ const TravelArchivePage = () => {
       });
       const { data } = await axios.get('http://localhost:8086/api/photos/travels', { params: { userId } });
       setTravelLogs(data);
-      window.location.reload(); // This will reload the current page
+      window.location.reload();
     } catch (err) {
-      setError(typeof err.response?.data === 'object' ? JSON.stringify(err.response?.data, null, 2) : err.response?.data || 'Upload failed');
+      setError(err.response?.data || 'Upload failed');
     }
   };
 
@@ -207,7 +232,7 @@ const TravelArchivePage = () => {
               )}
             </div>
           </div>
-        ))}
+        ))} 
       </div>
     </div>
   );
