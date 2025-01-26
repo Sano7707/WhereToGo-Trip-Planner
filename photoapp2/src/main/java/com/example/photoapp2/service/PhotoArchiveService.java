@@ -34,7 +34,7 @@ public class PhotoArchiveService {
     private void initializeStorage() throws IOException {
         StorageOptions storageOptions = StorageOptions.newBuilder()
                 .setProjectId("pelagic-sorter-448915-h0")
-                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("/Users/sano/Desktop/WhereToGo - Trip Planner/photoapp2/src/main/resources/static/pelagic-sorter-448915-h0-fa3ca77a5f13.json"))).build();
+                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("src\\main\\resources\\static\\pelagic-sorter-448915-h0-666a383a8659.json"))).build();
         storage = storageOptions.getService();
     }
 
@@ -138,12 +138,16 @@ public class PhotoArchiveService {
         return blob.getContent();
     }
 
-    public void createTravelLog(String userId, String travelDest, String travelDate) throws SQLException {
-        photoArchiveDAO.createTravelLog(userId, travelDest, travelDate);
+    public String createTravelLog(String userId, String travelDest, String travelDate) throws SQLException {
+        return photoArchiveDAO.createTravelLog(userId, travelDest, travelDate);
     }
 
     public java.util.List<Map<String, Object>> getTravelLogsForUser(String userId) {
         return photoArchiveDAO.getTravelLogsForUser(userId);
+    }
+
+    public void deleteTravelLogByTravelId(String travelId) throws SQLException {
+        photoArchiveDAO.deleteTravelLogByTravelId(travelId);
     }
     
     
