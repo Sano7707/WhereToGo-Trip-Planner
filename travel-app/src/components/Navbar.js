@@ -75,6 +75,11 @@ function Navbar({ isLoggedIn, userName }) {
                     Login
                   </Link>
                 </li>
+                <li className='nav-item'>
+                  <Link to='/travel-archive' className='nav-links' onClick={closeMobileMenu}>
+                    Travel Archives
+                  </Link>
+                </li>
               </>
             )}
           </ul>

@@ -83,7 +83,7 @@ public class PhotoArchiveDAO {
 
         // Load SQL queries
         sqlQueries = new Properties();
-        try (InputStream input = new FileInputStream("src/main/resources/static/sql-queries.properties")) {
+        try (InputStream input = new FileInputStream("/Users/sano/Desktop/WhereToGo - Trip Planner/photoapp2/src/main/resources/static/sql-queries.properties")) {
             sqlQueries.load(input);  // Load SQL queries from properties file
         } catch (IOException e) {
             System.err.println("Error loading SQL queries from properties file: " + e.getMessage());
@@ -94,7 +94,7 @@ public class PhotoArchiveDAO {
     public void setUpConnection(){
         // Load database properties
         Properties dbProperties = new Properties();
-        try (InputStream dbInput = new FileInputStream("src/main/resources/static/database.properties")) {
+        try (InputStream dbInput = new FileInputStream("/Users/sano/Desktop/WhereToGo - Trip Planner/photoapp2/src/main/resources/static/database.properties")) {
             dbProperties.load(dbInput);
             this.url = dbProperties.getProperty("db.url");
             this.username = dbProperties.getProperty("db.username");
