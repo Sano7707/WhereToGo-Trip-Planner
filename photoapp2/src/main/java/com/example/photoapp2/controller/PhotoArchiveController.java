@@ -2,7 +2,9 @@
 package com.example.photoapp2.controller;
 
 import com.example.photoapp2.service.PhotoArchiveService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +25,7 @@ public class PhotoArchiveController {
     }
 
     @GetMapping("/travels")
+    @CrossOrigin
     public ResponseEntity<Object> getAllTravelIdsForUser(@RequestParam("userId") String userId) {
         try {
             // Call the service method to retrieve the travelIds
@@ -41,6 +44,7 @@ public class PhotoArchiveController {
     }
 
     @PostMapping("/create")
+    @CrossOrigin
     public ResponseEntity<String> createNewTravelLog(@RequestParam("userId") String userId,
                                                      @RequestParam("travelDest") String travelDest,
                                                      @RequestParam("travelDate") String travelDate) {       
@@ -54,8 +58,9 @@ public class PhotoArchiveController {
         }
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadPhotos(@RequestParam("travelId") String travelId,
+    @PostMapping("/upload/{travelId}")
+    @CrossOrigin
+    public ResponseEntity<String> uploadPhotos(@PathVariable("travelId") String travelId,
                                                @RequestParam("files") MultipartFile[] files) {
         try {
             photoArchiveService.savePhotosAsArchive(travelId, files);
@@ -67,6 +72,7 @@ public class PhotoArchiveController {
     }
 
     @DeleteMapping("/delete/{travelId}")
+    @CrossOrigin
     public ResponseEntity<String> deleteArchive(@PathVariable String travelId) {
         try {
             photoArchiveService.deleteArchiveByTravelId(travelId);
@@ -78,17 +84,22 @@ public class PhotoArchiveController {
     }
 
     @GetMapping("/download/{travelId}")
-    public ResponseEntity<String> downloadArchive(@PathVariable String travelId) {
+    @CrossOrigin
+    public ResponseEntity<Object> downloadArchive(@PathVariable String travelId) {
         try {
-            String redirectUrl = photoArchiveService.downloadArchiveFromCloud(travelId);
-            String message = "If your download didn't start automatically, please click the link: " + redirectUrl;
-            
-            return ResponseEntity.status(HttpStatus.FOUND)
-                                 .header("Location", redirectUrl)
-                                 .body(message);
+            // Fetch the ZIP file data as a byte array
+            byte[] data = photoArchiveService.downloadArchiveFromCloud(travelId);
+
+            // Set headers to indicate a file download
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM) // For binary file downloads
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"archive.zip\"") // Suggest a file name
+                .body(data);
+
         } catch (SQLException | IOException e) {
+            // Return an error response if something goes wrong
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to download archive: " + e.getMessage());
+                .body(("Failed to download archive: " + e.getMessage()).getBytes());
         }
     }
 }

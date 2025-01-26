@@ -3,6 +3,7 @@ package com.example.photoapp2.service;
 import com.example.photoapp2.dao.PhotoArchiveDAO;
 import com.example.photoapp2.model.PhotoArchive;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -33,7 +34,7 @@ public class PhotoArchiveService {
     private void initializeStorage() throws IOException {
         StorageOptions storageOptions = StorageOptions.newBuilder()
                 .setProjectId("pelagic-sorter-448915-h0")
-                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("src/main/resources/static/pelagic-sorter-448915-h0-fa3ca77a5f13.json"))).build();
+                .setCredentials(GoogleCredentials.fromStream(new FileInputStream("/Users/sano/Desktop/WhereToGo - Trip Planner/photoapp2/src/main/resources/static/pelagic-sorter-448915-h0-fa3ca77a5f13.json"))).build();
         storage = storageOptions.getService();
     }
 
@@ -54,7 +55,7 @@ public class PhotoArchiveService {
 
         byte[] archiveData = baos.toByteArray();
         String archiveName = "archive_" + travelId + ".zip";
-        String objectName = "archives/" + UUID.randomUUID() + "/" + archiveName;
+        String objectName = "archives/" + archiveName;
 
         // Upload archive to Google Cloud Storage
         BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, objectName).setContentType("application/zip").build();
@@ -108,14 +109,33 @@ public class PhotoArchiveService {
         photoArchiveDAO.deleteByTravelId(travelId);
     }
 
-    public String downloadArchiveFromCloud(String travelId) throws IOException, SQLException {
+    public byte[] downloadArchiveFromCloud(String travelId) throws IOException, SQLException {
         PhotoArchive archive = photoArchiveDAO.findByTravelId(travelId);
-        
+
         if (archive == null) {
             throw new IOException("Archive not found for travelId: " + travelId);
         }
-        
-        return archive.getArchiveUrl();
+
+        String archiveUrl = archive.getArchiveUrl();
+
+        if (archiveUrl == null || archiveUrl.isEmpty()) {
+            throw new IOException("Archive URL is invalid for travelId: " + travelId);
+        }
+
+        String archiveName = "archive_" + travelId + ".zip";
+        String objectName = "archives/" + archiveName;
+
+        initializeStorage();
+
+        // Retrieve the file (blob) from the bucket
+        Blob blob = storage.get(bucketName, objectName);
+
+        if (blob == null || !blob.exists()) {
+            throw new IOException("File not found in Google Cloud Storage for travelId: " + travelId);
+        }
+
+        // Download the content as a byte array
+        return blob.getContent();
     }
 
     public void createTravelLog(String userId, String travelDest, String travelDate) throws SQLException {

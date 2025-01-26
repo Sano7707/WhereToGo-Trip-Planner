@@ -7,6 +7,7 @@ import Products from './components/pages/Products';
 import Registration from './components/pages/Registration';
 import LoginPage from './components/pages/LoginPage';
 import axios from 'axios'
+import TravelArchivePage from './components/pages/TravelArchivePage';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('jwtToken') !== null);
@@ -46,6 +47,8 @@ function App() {
         <Route path='/services' element={<Services />} />
         <Route path='/products' element={<Products />} />
         <Route path='/register' element={<Registration />} />
+        <Route path='/travel-archive' element={<TravelArchivePage />} />
+
         <Route
           path='/login'
           element={<LoginPage onLogin={() => setIsLoggedIn(true)} />}
