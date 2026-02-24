@@ -50,6 +50,5 @@ Explore the full API documentation on SwaggerHub:
 
 ### 📝 Notes
 
--   The  `.env`  file is missing, but all necessary API keys are included in the source code for free testing purposes.
+-   The  `.env`  file is missing; you must add all necessary API keys in the corresponding places for seamless application functioning.
     
--   **Important**: If the API key limits are reached, the services may not function as expected. These keys are provided solely for testing and demonstration purposes
