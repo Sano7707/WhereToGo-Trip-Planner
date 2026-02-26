@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
 
-
 function Navbar({ isLoggedIn, userName }) {
   const [click, setClick] = useState(false);
   const navigate = useNavigate();
@@ -30,27 +29,35 @@ function Navbar({ isLoggedIn, userName }) {
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
             <img src="/images/logo1.png" alt="pic" style={{ maxWidth: '80px', maxHeight: '40px' }} />
-            <h1 style={{color:"white"}}> WhereToGo</h1>
+            <h1 style={{ color: "white" }}> WhereToGo</h1>
           </Link>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
-              <Link to='/' className='nav-links' onClick={closeMobileMenu}>
-                Home
-              </Link>
-            </li>
+            {/* Only show Home link when not logged in */}
+            {!isLoggedIn && (
+              <li className='nav-item'>
+                <Link to='/' className='nav-links' onClick={closeMobileMenu}>
+                  Home
+                </Link>
+              </li>
+            )}
             {isLoggedIn && (
               <>
-               <li className='nav-item'>
+                <li className='nav-item'>
                   <Link to='/services' className='nav-links' onClick={closeMobileMenu}>
-                Where To Go
+                    Where To Go
                   </Link>
                 </li>
                 <li className='nav-item'>
                   <Link to='/products' className='nav-links' onClick={closeMobileMenu}>
-                    My Trips    
+                    My Trips
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link to='/travel-archive' className='nav-links' onClick={closeMobileMenu}>
+                    Travel Archives
                   </Link>
                 </li>
                 <li className='nav-item'>

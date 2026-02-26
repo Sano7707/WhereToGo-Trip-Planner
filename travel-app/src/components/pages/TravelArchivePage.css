@@ -1,0 +1,173 @@
+.travel-archive-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9f9f9; /* Soft background for the whole container */
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.error-banner {
+  background: #ffebee;
+  color: #b71c1c;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.create-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.travel-logs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.8rem;
+}
+
+.log-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.log-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Slight hover effect */
+}
+
+.log-header {
+  margin-bottom: 1.2rem;
+}
+
+.log-date {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.log-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+button {
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600; /* Consistent font weight for all buttons */
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.primary-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.upload-btn {
+  background: #4CAF50;
+  color: white;
+  font-size: 1.1rem; /* Slightly larger font for the upload button */
+  font-family: 'Arial', sans-serif; /* A different font for the upload button */
+  padding: 0.8rem 1.4rem; /* Larger padding for a distinct look */
+  border-radius: 20px; /* Rounded corners for the upload button */
+}
+
+.download-btn {
+  background: #FF9800;
+  color: white;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f44336;
+  color: white;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #d32f2f;
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+.delete-files-btn {
+  background: #FF5722;
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-size: 1rem;
+  font-weight: 600; /* Consistent font weight */
+}
+
+.delete-files-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px); /* Hover effect for the delete files button */
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+input[type="text"],
+input[type="date"] {
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+  border-color: #2196F3; /* Blue border on focus for input fields */
+  outline: none;
+}
+
+input[type="text"]::placeholder,
+input[type="date"]::placeholder {
+  color: #aaa;
+}
